@@ -18,6 +18,8 @@ permalink: /notes/devtools/s20jgkzb/
 
 Ubuntu: 
 
+`mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak`
+
 `vim /etc/netplan/00-installer-config.yaml`
 
 ```
@@ -37,6 +39,8 @@ network:
 `netplan apply`
 
 CentOS: 
+
+`mv /etc/sysconfig/network-scripts/ifcfg-ens33  /etc/sysconfig/network-scripts/ifcfg-ens33-bak`
 
 `vim /etc/sysconfig/network-scripts/ifcfg-ens33`
 

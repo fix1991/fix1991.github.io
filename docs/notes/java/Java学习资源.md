@@ -11,6 +11,3 @@ permalink: /notes/java/33t6upvz/
 
 《实战Java高并发程序设计（第2版）[葛一鸣]》
 
-## 视频教程
-
-云上办公【尚硅谷】：https://www.bilibili.com/video/BV1oM41177Jd

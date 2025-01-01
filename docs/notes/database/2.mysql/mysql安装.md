@@ -31,7 +31,17 @@ permalink: /notes/database/09n612a4/
 
 2.2 创建容器
 
-`docker create --name mysql8 --restart=always -p 3306:3306 -v /docker/mysql8/conf:/etc/mysql -v /docker/mysql8/data:/var/lib/mysql -v /docker/mysql8/logs:/var/log/mysql -e MYSQL_ROOT_PASSWORD=root mysql:8`
+```
+docker create --name mysql8 \
+    --restart=always \
+    -p 3306:3306 \
+    -v /docker/mysql8/conf:/etc/mysql \
+    -v /docker/mysql8/data:/var/lib/mysql \
+    -v /docker/mysql8/logs:/var/log/mysql \
+    -e MYSQL_ROOT_PASSWORD=root mysql:8
+```
+
+
 
 参数说明：
 

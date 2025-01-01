@@ -9,6 +9,7 @@ export default defineNavbarConfig([
     text: "笔记",
     prefix: "/notes/",
     items: [
+      { text: "项目", link: "/notes/projects/1qx76q2b/" },
       { text: "Java", link: "/notes/java/33t6upvz/" },
       { text: "Python", link: "/notes/python/3xdslzb9/" },
       { text: "Web前端", link: "/notes/web/rypds3ps/" },

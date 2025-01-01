@@ -9,7 +9,126 @@ permalink: /notes/java/rk910ukx/
 
 ## 快速开始
 
+1.添加依赖
 
+```xml
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.5.17</version>
+</dependency>
+```
+
+2.创建配置文件
+
+mybatis-config.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="database.properties"/>
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${JDBC_DRIVER}"/>
+                <property name="url" value="${JDBC_URL}"/>
+                <property name="username" value="${JDBC_USERNAME}"/>
+                <property name="password" value="${JDBC_PASSWORD}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <package name="me.ian.ssm.mapper"/>
+        <!--<mapper resource="me/ian/ssm/mapper/UserMapper.xml"/>-->
+        <!--<mapper class="me.ian.ssm.mapper.UserMapper"/>-->
+    </mappers>
+</configuration>
+```
+
+3.定义实体类
+
+```java
+import java.sql.Date;
+import java.sql.Timestamp;
+
+@Data
+public class User {
+
+    private String id;
+    private String username;
+    private String password;
+    private Integer age;
+    private String gender;
+    private Date birthday;
+    private String phoneNumber;
+    private String address;
+    private Integer locked;
+    private Timestamp createTime;
+    private String creatorId;
+    private Timestamp updateTime;
+    private String updaterId;
+}
+```
+
+4.定义Mapper接口以及XML映射文件
+
+UserMapper.java
+
+```java
+public interface UserMapper {
+    User selectUserById(String id);
+}
+```
+
+UserMapper.xml
+
+```xml
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.ian.ssm.mapper.UserMapper">
+    <select id="selectUserById" resultType="me.ian.ssm.domain.entity.User">
+        select * from t_user where id = #{id}
+    </select>
+</mapper>
+```
+
+5.使用
+
+```java
+public class MyBatisTests {
+    @Test
+    public void test(){
+        try {
+            // 读取配置文件
+            InputStream input = Resources.getResourceAsStream("mybatis-config.xml");
+            // 创建 SqlSessionFactory 对象
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(input);
+            // 创建 SqlSession 对象
+            try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+                // 获取 UserMapper 对象
+                UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+                // 调用方法
+                User user = mapper.selectUserById("E026987DC4F911EF916A0242AC110002");
+                // 输出结果
+                System.out.println(user);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
 
 ## 插入
 
@@ -464,3 +583,15 @@ public class Pager<Item> {
 ```
 
 ## 动态sql
+
+if
+
+set
+
+foreach
+
+choose
+
+trim
+
+sql 和 include

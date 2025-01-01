@@ -1,5 +1,13 @@
 import { defineNoteConfig, defineNotesConfig } from "vuepress-theme-plume";
 
+// 项目
+const projects = defineNoteConfig({
+  dir: 'projects',
+  link: 'projects',
+  text: '项目',
+  sidebar: 'auto'
+});
+
 // Java
 const java = defineNoteConfig({
   dir: 'java',
@@ -91,9 +99,9 @@ const math = defineNoteConfig({
 });
 
 // 第三方服务
-const thirdPartyServices = defineNoteConfig({
-  dir: 'thirdPartyServices',
-  link: 'thirdPartyServices',
+const services = defineNoteConfig({
+  dir: 'services',
+  link: 'services',
   text: '第三方服务',
   sidebar: 'auto'
 });
@@ -144,6 +152,7 @@ export default defineNotesConfig({
   dir: '/notes/',
   link: '/notes/',
   notes: [
+    projects,
     math,
     ai,
     python,
@@ -157,7 +166,7 @@ export default defineNotesConfig({
     cs,
     devtools,
     software,
-    thirdPartyServices,
+    services,
     funs,
     interview,
     others,

@@ -21,14 +21,45 @@ export default defineUserConfig({
 
   theme: plumeTheme({
     // 部署站点域名
-    hostname: '',
+    hostname: "",
 
     plugins: {
       // 语法高亮插件
       shiki: {
-        languages: ["dockerfile","yaml","sh","xml","json","java","shell","javascript","sql","properties","bat","html","js","css","vue"],
+        languages: [
+          "bat",
+          "sh",
+          "shell",
+          "shellscript",
+          "cmake",
+          "makefile",
+          "dockerfile",
+          "lua",
+          "xml",
+          "json",
+          "jsonc",
+          "properties",
+          "yaml",
+          "csv",
+          "markdown",
+          "c",
+          "cpp",
+          "java",
+          "kotlin",
+          "python",
+          "csharp",
+          "go",
+          "groovy",
+          "javascript",
+          "sql",
+          "html",
+          "js",
+          "css",
+          "vue",
+          "latex"
+        ],
         // https://shiki.style/themes
-        theme: { light: 'github-light', dark: 'material-theme-darker' },
+        theme: { light: "github-light", dark: "material-theme-darker" },
       },
 
       // markdown插件
@@ -43,11 +74,10 @@ export default defineUserConfig({
         // @[youtube](id)
         youtube: true,
       },
-    }
+    },
   }),
 
-  plugins: [
-  ],
+  plugins: [],
 
   alias: {
     // '@alias': path.resolve(__dirname, './path/to/some/dir'),
