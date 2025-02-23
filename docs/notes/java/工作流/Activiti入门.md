@@ -65,21 +65,32 @@ Activiti工作流实战开发：https://xuzhongcn.github.io/activ
 ```properties
 server.port=8080
 spring.application.name=quickstart
-# 数据源
+# datasource
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://192.168.95.129:3306/activiti7?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
 spring.datasource.username=root
 spring.datasource.password=root
 spring.datasource.type=org.springframework.jdbc.datasource.SimpleDriverDataSource
+
 # activiti
+# 数据库名称
 spring.activiti.database-schema=activiti7
+# 自动更新数据库表:启用
 spring.activiti.database-schema-update=true
-spring.activiti.check-process-definitions=false
+# 流程历史信息:启用
 spring.activiti.db-history-used=true
 spring.activiti.history-level=full
+# 启动时检查数据库中保存的流程定义是否存在,并自动部署:关闭
+spring.activiti.check-process-definitions=false
 ```
 
-另外，Activiti7的身份认证使用的是SpringSecurity，其Starter自动配置`UserGroupManager`，依赖一个`UserDetailsService` Bean。源码如下：
+Activiti还必须配置一个Datasource，这里使用Spring提供的数据源实现
+
+```properties
+spring.datasource.type=org.springframework.jdbc.datasource.SimpleDriverDataSource
+```
+
+另外，Activiti 7.1.0.M5 版本开始，身份认证使用的是SpringSecurity，其Starter自动配置`UserGroupManager`，依赖一个`UserDetailsService` Bean。源码如下：
 
 ```java
 @Configuration
@@ -92,7 +103,7 @@ public class ActivitiSpringIdentityAutoConfiguration {
 }
 ```
 
-所以，还需要注入一个`UserDetailsService` Bean。如下：
+所以，要么选择Activiti 7.1.0.M4及以下版本，要么使用spring-security，并注入一个`UserDetailsService` Bean。如下：
 
 ```java
 @Bean
@@ -106,21 +117,20 @@ public UserDetailsService userDetailsService() {
 }
 ```
 
-最后，Activiti还必须配置一个Datasource，这里使用Spring提供的数据源实现
+最后，Activiti 7.1.0.M4版本的生成的流程部署数据表(ACT_RE_DEPLOYMENT)，缺少2个字段，需要添加，否则部署会报错
 
-```properties
-spring.datasource.type=org.springframework.jdbc.datasource.SimpleDriverDataSource
+```sql
+ALTER TABLE ACT_RE_DEPLOYMENT ADD VERSION_ INT NULL;
+ALTER TABLE ACT_RE_DEPLOYMENT ADD PROJECT_RELEASE_VERSION_ INT NULL;
 ```
 
 *activiti-spring-boot-starter*自动完成以下操作：
 
-- 自动配置流程引擎`ProcessEngine`
+- 自动配置流程引擎，并注入以下Bean：`ProcessEngineConfiguration`、`ProcessEngine`
 - 自动初始化流程数据库表
-- 自动注入流程常用的流程服务Bean：`RepositoryService`、`TaskService`、`runtimeService`等
+- 自动注入流程常用的流程服务Bean：`RepositoryService`、`TaskService`、`runtimeService`、`HistoryService`、`ManagementService`、`DynamicBpmnService`等
 
-## 使用自定义配置文件
-
-创建activiti配置文件
+## Activit6使用自定义配置文件
 
 *activiti.cfg.xml*
 
@@ -165,7 +175,9 @@ public void testProcessEngine() {
 }
 ```
 
-## 部署流程
+## 使用示例
+
+### 部署流程
 
 ```java
 @Resource
@@ -185,7 +197,7 @@ public void testDeployBPMN() {
 }
 ```
 
-## 查询流程信息
+### 查询流程信息
 
 ```java
 @Resource
@@ -212,7 +224,7 @@ public void testQueryProcesses() {
 }
 ```
 
-## 删除流程信息
+### 删除流程信息
 
 ```java
 @Resource
@@ -229,20 +241,14 @@ public void testDeleteProcess(){
 }
 ```
 
-## 启动流程实例
+### 启动流程实例
 
+### 查询待办任务
 
+### 审批任务
 
-## 查询待办任务
+### 查询已办任务
 
-## 审批任务
+### 回退任务
 
-
-
-## 查询已办任务
-
-## 回退任务
-
-
-
-## 结束任务
+### 结束任务

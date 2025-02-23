@@ -7,11 +7,11 @@ config:
       light: 0.3
       dark: 0.3
     hero:
-      name: 亦谙博客
-      tagline: 纸上得来终觉浅，绝知此事要躬行！
-      text: Just do it !!!。
+      name: Fix1991
+      tagline: Life is short, enjoy it！
+      text: 
       actions:
-        - text: 我的博客
+        - text: MyBlog
           link: /blog/
           theme: brand
         - text: Github

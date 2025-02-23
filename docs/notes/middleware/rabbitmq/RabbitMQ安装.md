@@ -21,11 +21,11 @@ permalink: /notes/middleware/6zf87y1b/
 
 1.下载镜像
 
-`docker pull rabbitmq:3`
+`docker pull rabbitmq:4`
 
 2.创建容器
 
-`docker create --name myrabbit -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest -e RABBITMQ_DEFAULT_VHOST=/ rabbitmq:3`
+`docker create --name rabbitmq4 -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest -e RABBITMQ_DEFAULT_VHOST=/ rabbitmq:4`
 
 参数：
 
@@ -36,17 +36,17 @@ permalink: /notes/middleware/6zf87y1b/
 
 3.启动容器
 
-`docker start myrabbit`
+`docker start rabbitmq4`
 
 4.查看容器启动日志
 
-`docker logs myrabbit`
+`docker logs rabbitmq4`
 
 5.启用RabbitMQ管理插件
 
 进入容器
 
-`docker exec -it myrabbit bash`
+`docker exec -it rabbitmq4 bash`
 
 启动插件
 

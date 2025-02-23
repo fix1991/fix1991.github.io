@@ -52,6 +52,14 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 创建Mapper接口
 
 ```java
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.ian.ssm.mapper.UserMapper">
+    <select id="selectUserById" resultType="me.ian.ssm.domain.entity.User">
+        select * from t_user where id = #{id}
+    </select>
+</mapper>
 ```
 
 创建XML映射文件
@@ -136,7 +144,7 @@ public class Sort {
 
 #### 定义分页器
 
-封装分页是的limit数量和offset数量，以及0或多个排序策略`Sort`，用于支持多个排序字段
+封装分页器，limit数量和offset数量，以及0或多个排序策略`Sort`，用于支持多个排序字段
 
 ```java
 public class Pageable {

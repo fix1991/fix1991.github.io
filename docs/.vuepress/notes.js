@@ -57,6 +57,14 @@ const middleware = defineNoteConfig({
   sidebar: 'auto'
 });
 
+// 小程序开发
+const miniprogram = defineNoteConfig({
+  dir: '小程序开发',
+  link: 'miniprogram',
+  text: '小程序开发',
+  sidebar: 'auto'
+});
+
 // 我的世界
 const minecraft = defineNoteConfig({
   dir: 'minecraft',
@@ -158,6 +166,7 @@ export default defineNotesConfig({
     python,
     java,
     web,
+    miniprogram,
     website,
     database,
     middleware,

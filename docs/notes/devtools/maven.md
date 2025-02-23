@@ -96,7 +96,7 @@ Linux: `cp conf/settings.xml ~/.m2/`
 
 依赖作用范围：
 
-+ compile：默认范围，对编译、测试、运行都有效
++ compile：默认，对编译、测试、运行都有效
 
 + test：对测试有效
 

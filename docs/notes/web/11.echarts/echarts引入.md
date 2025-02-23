@@ -1,5 +1,5 @@
 ---
-title: echarts
+title: 引入echarts
 createTime: 2024/11/30 20:45:10
 permalink: /notes/web/75s65rf7/
 ---

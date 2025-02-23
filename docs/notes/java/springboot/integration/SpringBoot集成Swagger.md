@@ -5,13 +5,17 @@ permalink: /notes/java/cxf7e6v6/
 ---
 ## SpringBoot2集成Swagger3
 
+官方文档：https://springdoc.org/v1/
+
+springdoc-openapi v1.8.0是最后一个支持springboot 1.x和2.x的版本。
+
 1.添加依赖
 
 ```xml
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-ui</artifactId>
-    <version>1.6.13</version>
+    <version>1.8.0</version>
 </dependency>
 ```
 
@@ -19,16 +23,40 @@ permalink: /notes/java/cxf7e6v6/
 
 ```java
 @Configuration
-public class SwaggerConfig {
+public class SwaggerConfiguration {
+	
+    // 配置文档基本信息
+    @Bean
+    public OpenAPI openAPI() {
+        Contact contact = new Contact().name("xxx").email("xxx@gmail.com").url("https://xxx.github.io");
+        License license = new License().name("Apache License 2.0").url("https://www.apache.org/licenses/LICENSE-2.0");
+        Info info = new Info().title("API接口文档")
+                .summary("API接口文档")
+                .description("API接口文档")
+                .version("1.0")
+                .contact(contact)
+                .license(license);
+        return new OpenAPI(SpecVersion.V31)
+                .info(info);
+    }
+    
+    // API分组
+    @Bean
+    public GroupedOpenApi sysApi(){
+        return GroupedOpenApi.builder()
+                .group("public")
+            	.displayName("公开接口")
+                .pathsToMatch("/api/v1/public/**")
+                .build();
+    }
 
     @Bean
-    public OpenAPI api() {
-        Info info = new Info().title("云尚办公API接口文档")
-                .description("云尚办公API接口文档")
-                .version("1.0");
-
-        return new OpenAPI(SpecVersion.V30)
-                .info(info);
+    public GroupedOpenApi sysApi(){
+        return GroupedOpenApi.builder()
+                .group("admin")
+            	.displayName("后台接口")
+                .pathsToMatch("/api/v1/admin/**")
+                .build();
     }
 }
 ```
@@ -39,9 +67,7 @@ http://localhost:8080/swagger-ui.html
 
 ## SpringBoot3集成springdoc-openapi
 
-参考：
-
-- https://springdoc.org/
+官方文档：https://springdoc.org/
 
 ### 添加依赖
 

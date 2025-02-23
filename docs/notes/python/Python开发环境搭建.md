@@ -20,6 +20,30 @@ https://www.python.org/downloads/
 
 ## pip
 
+配置镜像源
+
+windows：
+
+1. `cd C:\Users\xxx && mkdir pip && cd pip`
+
+2. 创建pip.ini文件，内容如下
+
+   ```
+   [global]
+   index-url = https://pypi.mirrors.ustc.edu.cn/simple/
+   ```
+
+Linux、MacOS：
+
+1. `cd ~ && mkdir .pip && cd .pip`
+
+2. 创建pip.conf文件，内容如下
+
+   ```
+   [global]
+   index-url = https://pypi.mirrors.ustc.edu.cn/simple/
+   ```
+
 ## virtualenv
 
 官网：https://virtualenv.pypa.io/en/latest/
@@ -38,10 +62,14 @@ Anaconda的精简版本
 
 https://docs.anaconda.com/miniconda/
 
+### 安装
+
 安装后，需要在PATH环境变量中添加下面2个路径：
 
 - path/to/miniconda3
 - path/to/miniconda3/Scripts
+
+### 命令
 
 初始化conda Shell环境：`conda init`
 
@@ -64,3 +92,22 @@ https://docs.anaconda.com/miniconda/
 更新lib：`conda update lib_name`
 
 查看lib列表：`conda list`
+
+### 配置镜像源
+
+生成配置文件~/.condarc：`conda config --set show_channel_urls yes`
+
+修改~/.condarc
+
+```
+channels:
+  - https://mirrors.ustc.edu.cn/anaconda/pkgs/free/
+  - https://mirrors.ustc.edu.cn/anaconda/pkgs/main
+  - https://mirrors.ustc.edu.cn/anaconda/pkgs/r
+  - https://mirrors.ustc.edu.cn/anaconda/pkgs/msys2
+  - https://mirrors.ustc.edu.cn/anaconda/cloud/conda-forge
+  - https://mirrors.ustc.edu.cn/anaconda/cloud/bioconda
+show_channel_urls: true
+```
+
+清除缓存：`conda clean -i`

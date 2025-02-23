@@ -11,50 +11,57 @@ permalink: /notes/java/7zyb1vjj/
 
 ```java
 @Getter
+public enum ApiStatus {
+    SUCCESS(200, "成功"),
+    BAD_REQUEST(400, "请求参数错误"),
+    UNAUTHORIZED(401, "未授权"),
+    FORBIDDEN(403, "禁止访问"),
+    NOT_FOUND(404, "资源未找到"),
+    INTERNAL_SERVER_ERROR(500, "内部服务器错误");
+
+    private final int code;
+    private final String message;
+
+    ApiStatus(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+}
+```
+
+定义统一响应数据结构
+
+```java
+@Getter
+@Setter
 public class ApiResponse<T> implements Serializable {
     private final int code;
     private final String message;
     private final T data;
     private final long timestamp;
 
-    private ApiResponse(int code, String message, T data) {
+    public ApiResponse(int code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
         this.timestamp = System.currentTimeMillis();
     }
 
-    public static <T> ApiResponse<T> ok(T data) {
-        return new ApiResponse<>(Status.OK.code, Status.OK.message, data);
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(ApiStatus.SUCCESS.getCode(), ApiStatus.SUCCESS.getMessage(), data);
     }
 
-    public static <T> ApiResponse<T> fail(Status status) {
-        return new ApiResponse<>(status.code, status.message, null);
-    }
-
-    public static <T> ApiResponse<T> fail(int code, String message) {
+    public static ApiResponse<Void> error(int code, String message){
         return new ApiResponse<>(code, message, null);
     }
 
-    public enum Status {
-        OK(0, "ok"),
-        BAD_REQUEST(400, "请求错误"),
-        NOT_FOUND(404, "资源不存在"),
-        SERVER_ERROR(500, "服务器错误"),
-        OTHER(999, "未知错误");
-
-        final int code;
-        final String message;
-
-        Status(int code, String message) {
-            this.code = code;
-            this.message = message;
-        }
+    public static ApiResponse<Void> error(ApiStatus apiStatus) {
+        return error(apiStatus.getCode(), apiStatus.getMessage());
     }
 }
 ```
 
-## 使用`ResponseBodyAdvice`自动返回统一的响应数据结构
+## 使用`ResponseBodyAdvice`自动封装统一的响应数据结构
 
 定义一个注解，用于标记是否开启自动返回统一响应数据格式的功能。使用时，只需要在类、方法上使用注解即可
 
@@ -132,7 +139,7 @@ public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 public class BusinessException extends RuntimeException {
     private final int code;
 
-    public BusinessException(int code, String message){
+    public BusinessException(int code, String message) {
         super(message);
         this.code = code;
     }
@@ -149,20 +156,24 @@ public class GlobalExceptionHandlerAdvice {
     public ApiResponse<String> handleException(HttpServletRequest req, HttpServletResponse resp, Throwable throwable) {
         // 参数绑定、校验异常
         if(throwable instanceof MissingServletRequestParameterException ex) {
-            return ApiResponse.fail(400, String.format("缺少请求参数%s", ex.getParameterName()));
+            return ApiResponse.error(400, String.format("缺少请求参数%s", ex.getParameterName()));
         }
         if(throwable instanceof BindException ex) {
-            return ApiResponse.fail(400, ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+            return ApiResponse.error(400, ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         }
         if(throwable instanceof ValidationException ex) {
-            return ApiResponse.fail(400, ex.getMessage());
+            return ApiResponse.error(400, ex.getMessage());
         }
-        // 处理自定义业务异常
+        // 处理业务异常
         if (throwable instanceof BusinessException ex){
-            return ApiResponse.fail(ex.getCode(), ex.getMessage());
+            return ApiResponse.error(ex.getCode(), ex.getMessage());
         }
-        // 未知错误
-        return ApiResponse.fail(ApiResponse.Status.OTHER);
+        // 处理其它异常
+        String message = throwable.getMessage();
+        if (message == null || message.trim().isBlank()){
+            message = "未知错误";
+        }
+        return ApiResponse.error(0, message);
     }
 }
 ```

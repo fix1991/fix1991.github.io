@@ -59,6 +59,7 @@ management.endpoints.jmx.exposure.exclude=info
 ```properties
 management.endpoints.enabled-by-default=true
 
+management.endpoints.web.base-path: /actuator
 management.endpoints.web.exposure.include=health,info,beans
 management.endpoints.web.exposure.exclude=info
 ```

@@ -9,8 +9,8 @@ const __dirname = getDirname(import.meta.url);
 export default defineUserConfig({
   base: "/",
   lang: "zh-CN",
-  title: "亦谙",
-  description: "亦谙博客",
+  title: "Fix1991",
+  description: "Fix1991",
   port: 3000,
 
   head: [["link", { rel: "icon", href: "/favicon.ico" }]],

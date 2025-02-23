@@ -15,6 +15,7 @@ export default defineNavbarConfig([
       { text: "Web前端", link: "/notes/web/rypds3ps/" },
       { text: "数据库技术", link: "/notes/database/eu1e2o1d/" },
       { text: "中间件技术", link: "/notes/middleware/s5cgh29g/" },
+      { text: "小程序开发", link: "/notes/miniprogram/#" },
       { text: "AI", link: "/notes/ai/1wzp28iv/" },
       { text: "计算机基础", link: "/notes/cs/3djwb0qj/" },
       { text: "数学", link: "#" },
