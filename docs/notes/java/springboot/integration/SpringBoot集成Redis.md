@@ -96,21 +96,30 @@ public void testRedisTemplate(){
 + 对于value，使用`Jackson2JsonRedisSerializer`
 
 ```java
-@Bean
-public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory){
-    RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-    redisTemplate.setConnectionFactory(connectionFactory);
-    
-    RedisSerializer<String> stringRedisSerializer = RedisSerializer.string();
-    RedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
-    // 设置键值序列化器
-    redisTemplate.setKeySerializer(stringRedisSerializer);
-    redisTemplate.setHashKeySerializer(stringRedisSerializer);
-    redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-    redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+@Configuration
+public class RedisConfiguration {
 
-    redisTemplate.afterPropertiesSet();
-    return redisTemplate;
+    @Bean
+    public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory factory){
+        RedisTemplate<String,Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+
+        RedisSerializer<String> stringRedisSerializer = RedisSerializer.string();
+        RedisSerializer<Object> valueRedisSerializer = new GenericJackson2JsonRedisSerializer();
+
+        // 设置Key序列化器
+        template.setKeySerializer(stringRedisSerializer);
+        // 设置Value序列化器
+        template.setValueSerializer(valueRedisSerializer);
+        // 设置Hash Key序列化器
+        template.setHashKeySerializer(stringRedisSerializer);
+        // 设置Hash Value序列化器
+        template.setHashValueSerializer(valueRedisSerializer);
+
+        template.setEnableTransactionSupport(false); // 是否开启事务支持
+        template.afterPropertiesSet();
+        return template;
+    }
 }
 ```
 

@@ -264,10 +264,9 @@ public class AccountPasswordAuthenticationProvider implements AuthenticationProv
 
 ```java
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
     private final ObjectMapper objectMapper;
 
-    public SysUserAuthenticationFailureHandler(ObjectMapper objectMapper) {
+    public CustomAuthenticationSuccessHandler(ObjectMapper objectMapper){
         this.objectMapper = objectMapper;
     }
 
@@ -277,13 +276,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
 
-        Map<String,Object> body = new LinkedHashMap<>(){{
-            put("code", HttpStatus.OK.value());
-            put("msg", HttpStatus.OK.getReasonPhrase());
-        }};
-
-        try(PrintWriter writer = response.getWriter()) {
-            writer.write(objectMapper.writeValueAsString(body));
+        ApiResponse<String> apiResponse = ApiResponse.success("认证通过");
+        String data = objectMapper.writeValueAsString(apiResponse);
+        try (PrintWriter writer = response.getWriter()){
+            writer.write(data);
         }
     }
 }
@@ -293,10 +289,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 ```java
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
-
     private final ObjectMapper objectMapper;
 
-    public SysUserAuthenticationFailureHandler(ObjectMapper objectMapper) {
+    public CustomAuthenticationFailureHandler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -306,15 +301,12 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
 
-        Map<String,Object> body = new LinkedHashMap<>(){{
-            put("code", HttpStatus.UNAUTHORIZED.value());
-            put("msg", exception.getMessage());
-        }};
-
-        PrintWriter writer = response.getWriter();
-        writer.write(objectMapper.writeValueAsString(body));
-        writer.flush();
-        writer.close();
+        String message = exception.getMessage();
+        ApiResponse<String> apiResponse = ApiResponse.fail(ApiStatus.UNAUTHORIZED.getCode(), message);
+        String data = objectMapper.writeValueAsString(apiResponse);
+        try (PrintWriter writer = response.getWriter()){
+            writer.write(data);
+        }
     }
 }
 ```
@@ -384,7 +376,7 @@ public class ApiSecurityConfiguration {
      * Filter: 账号密码认证过滤器
      */
     @Bean
-    public AccountPasswordAuthenticationFilter accountPasswordAuthenticationFilter() throws Exception {
+    public Filter accountPasswordAuthenticationFilter() throws Exception {
         AccountPasswordAuthenticationFilter filter = new AccountPasswordAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
@@ -396,7 +388,7 @@ public class ApiSecurityConfiguration {
      * AuthenticationProvider: 账号密码认证Provider
      */
     @Bean
-    public AccountPasswordAuthenticationProvider accountPasswordAuthenticationProvider() {
+    public AuthenticationProvider accountPasswordAuthenticationProvider() {
         AccountPasswordAuthenticationProvider provider = new AccountPasswordAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userDetailsService());

@@ -227,7 +227,7 @@ docker有2类数据：
 
 **挂载host中指定的目录或文件到容器文件系统**
 
-使用-v选项，指定host挂载源和container挂载点
+使用-v选项，指定host挂载点和container挂载点
 
 `docker run -d -p 80:80 -v E:\coding\docker\htdocs:/usr/local/apache2/htdocs --name myhttpd httpd`
 
